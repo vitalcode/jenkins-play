@@ -27,18 +27,32 @@ RUN apt-get update && \
         containerd.io
 
 # Installing the plugins we need using the in-built install-plugins.sh script
-RUN /usr/local/bin/install-plugins.sh git matrix-auth workflow-aggregator docker-workflow blueocean credentials-binding
-
-# Setting up environment variables for Jenkins admin user
-ENV JENKINS_USER admin
-ENV JENKINS_PASS admin
+RUN /usr/local/bin/install-plugins.sh \
+    cloudbees-folder \
+    ntisamy-markup-formatter \
+    git \
+    ant \
+    gradle \
+    matrix-auth \
+    workflow-aggregator \
+    github-branch-source \
+    pipeline-github-lib \
+    pipeline-stage-view \
+    docker-workflow \
+    blueocean \
+    credentials-binding \
+    email-ext \
+    mailer \
+    build-timeout \
+    timestamper \
+    ws-cleanup
 
 # Skip the initial setup wizard
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
 # Start-up scripts to set number of executors and creating the admin user
-#COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/
-#COPY default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY tools/executors.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY tools/default-user.groovy /usr/share/jenkins/ref/init.groovy.d/
 
 USER ${user}
 
